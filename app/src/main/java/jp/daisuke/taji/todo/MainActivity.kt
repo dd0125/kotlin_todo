@@ -2,7 +2,6 @@ package jp.daisuke.taji.todo
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,27 +10,21 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.room.Room
-import jp.daisuke.taji.todo.db.AppDataBase
 import jp.daisuke.taji.todo.db.model.Task
-import jp.daisuke.taji.todo.db.model.TaskDao
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-const val DATABASE_FILE_NAME = "kotlin_room_sample2.db";
 
 class MainActivity : AppCompatActivity() {
-    private var taskDao: TaskDao? = null;
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // TaskDao の準備
-        setupTaskDao()
 
         input_new_todo_edit_text.setOnEditorActionListener { v, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -89,6 +82,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refreshTasks() {
+        val mainApplication = application as MainApplication
+        val taskDao = mainApplication.getTaskDao()
 
         val activity = this
         var tasks:List<TaskData>? = null
@@ -116,9 +111,9 @@ class MainActivity : AppCompatActivity() {
      */
     private fun insertTask(text:String):Boolean {
 
+        val mainApplication = application as MainApplication
+        val taskDao = mainApplication.getTaskDao()
 
-
-        val taskDao = this.taskDao
         if(taskDao == null){
             return false
         }
@@ -127,21 +122,9 @@ class MainActivity : AppCompatActivity() {
         task.text = text
         taskDao.create(task)
 
-        val taskList = taskDao.findAll()
-        Log.d("data","Size = " + Integer.toString( taskList.size))
-
-        taskList.forEach {
-
-            Log.d("data",it.id.toString() + " " + it.text)
-        }
         return true
     }
-    private fun setupTaskDao() {
-        val databaseBuilder = Room.databaseBuilder(applicationContext, AppDataBase::class.java, DATABASE_FILE_NAME)
-        val database = databaseBuilder.build()
-        this.taskDao = database.taskDao()
 
-    }
 
 
 }

@@ -13,25 +13,25 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
 import jp.daisuke.taji.todo.db.AppDataBase
-import jp.daisuke.taji.todo.db.model.Todo
-import jp.daisuke.taji.todo.db.model.TodoDao
+import jp.daisuke.taji.todo.db.model.Task
+import jp.daisuke.taji.todo.db.model.TaskDao
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-const val DATABASE_FILE_NAME = "kotlin_room_sample.db";
+const val DATABASE_FILE_NAME = "kotlin_room_sample2.db";
 
 class MainActivity : AppCompatActivity() {
-    private var todoDao: TodoDao? = null;
+    private var taskDao: TaskDao? = null;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // TodoDao の準備
-        setupTodoDao()
+        // TaskDao の準備
+        setupTaskDao()
 
         input_new_todo_edit_text.setOnEditorActionListener { v, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
                 val text:String = editText.text.toString()
                 val deferred = GlobalScope.async {
                     // タスクを新規保存
-                    val isSuccess = insertTodo(text)
+                    val isSuccess = insertTask(text)
 
                     return@async isSuccess
                 }
@@ -91,48 +91,55 @@ class MainActivity : AppCompatActivity() {
     private fun refreshTasks() {
 
         val activity = this
-        GlobalScope.launch {
-            val todoList = todoDao!!.findAll()
-            val tasks = List(todoList.size) { i ->
+        var tasks:List<TaskData>? = null
+        val launch = GlobalScope.launch {
+            val taskList = taskDao!!.findAll()
+            if(taskList == null){
+                return@launch
+            }
+            tasks = List(taskList.size) { i ->
 
-                TaskData(todoList[i].text)
+                TaskData(taskList[i].text)
             }
 
-            val adapter = TaskListAdapter(activity, tasks)
-            task_list_view.adapter = adapter
-
         }
+        runBlocking{
+            launch.join()
+        }
+
+        val adapter = TaskListAdapter(activity, tasks!!)
+        task_list_view.adapter = adapter
     }
 
     /***
      * aaa
      */
-    private fun insertTodo(text:String):Boolean {
+    private fun insertTask(text:String):Boolean {
 
 
 
-        val todoDao = this.todoDao
-        if(todoDao == null){
+        val taskDao = this.taskDao
+        if(taskDao == null){
             return false
         }
         // todo の新規作成
-        val todo = Todo()
-        todo.text = text
-        todoDao.create(todo)
+        val task = Task()
+        task.text = text
+        taskDao.create(task)
 
-        val todoList = todoDao.findAll()
-        Log.d("data","Size = " + Integer.toString( todoList.size))
+        val taskList = taskDao.findAll()
+        Log.d("data","Size = " + Integer.toString( taskList.size))
 
-        todoList.forEach {
+        taskList.forEach {
 
             Log.d("data",it.id.toString() + " " + it.text)
         }
         return true
     }
-    private fun setupTodoDao() {
+    private fun setupTaskDao() {
         val databaseBuilder = Room.databaseBuilder(applicationContext, AppDataBase::class.java, DATABASE_FILE_NAME)
         val database = databaseBuilder.build()
-        this.todoDao = database.todoDao()
+        this.taskDao = database.taskDao()
 
     }
 

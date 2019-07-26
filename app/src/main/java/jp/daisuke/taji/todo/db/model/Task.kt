@@ -5,12 +5,12 @@ import androidx.room.PrimaryKey
 import java.util.*
 
 @Entity
-class Todo {
+class Task {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
 
     var text: String? = null
 
-    var deletedAt: Date? = null
+    var doneAt: Date? = null
     var createdAt: Date? = null
 }

@@ -4,10 +4,6 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'org.jetbrains.kotlin.kapt'
-//plugins {
-//    id "org.jetbrains.kotlin.kapt" version "1.2.40"
-//}
 
 android {
     compileSdkVersion 28
@@ -45,16 +41,11 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-//    implementation 'android.arch.persistence.room:runtime:1.1.1'
-//    annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
 
+
+    // Android Room を使用するための設定
     def room_version = "2.1.0"
     implementation "androidx.room:room-runtime:$room_version"
-//    annotationProcessor "androidx.room:room-compiler:$room_version" // For Kotlin use kapt instead of annotationProcessor
-    kapt "androidx.room:room-compiler:$room_version" // For Kotlin use kapt instead of annotationProcessor
-//    kapt "androidx.room:room-compiler:$room_version" // use kapt for Kotlin
-//        kapt "androidx.room:room-compiler:2.0.0"
-//    kapt "androidx.room:room-compiler:2.1.0"
-//    kapt "android.arch.persistence.room:compiler:1.1.1"
+    kapt "androidx.room:room-compiler:$room_version"
 
 }

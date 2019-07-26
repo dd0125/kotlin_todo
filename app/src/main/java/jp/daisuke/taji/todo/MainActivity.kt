@@ -35,7 +35,8 @@ class MainActivity : AppCompatActivity() {
             Log.d("data","Size = " + Integer.toString( todoList.size))
 
             todoList.forEach {
-                Log.d("data",it.text)
+
+                Log.d("data",it.id.toString() + " " + it.text)
             }
         }
 

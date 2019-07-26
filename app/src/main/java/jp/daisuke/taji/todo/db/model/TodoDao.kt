@@ -1,4 +1,4 @@
-package jp.daisuke.taji.todo.db
+package jp.daisuke.taji.todo.db.model
 
 import androidx.room.*
 

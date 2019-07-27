@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
                     val isSuccess = deferred.await()
                     if(isSuccess){
                         // 入力値をクリアする
-                        editText.setText("")
+                        editText.text.clear()
 
                         // キーボードを閉じる
                         val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

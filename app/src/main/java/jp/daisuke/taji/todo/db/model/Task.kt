@@ -9,7 +9,7 @@ class Task {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
 
-    var text: String? = null
+    var name: String? = null
 
     var doneAt: Date? = null
     var createdAt: Date? = null

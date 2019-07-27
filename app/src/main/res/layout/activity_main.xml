@@ -16,8 +16,8 @@
             app:layout_constraintRight_toRightOf="parent"
             android:orientation="horizontal">
         <Button
-            android:layout_width="20dp" android:layout_height="match_parent"
-            android:text="ALL"
+                android:layout_width="50dp" android:layout_height="match_parent"
+                android:text="ALL"
         />
         <EditText
             android:id="@+id/input_new_todo_edit_text"
@@ -33,7 +33,7 @@
             android:layout_width="0dp" android:layout_height="0dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:background="#fcc"
+            android:background="#eff"
             app:layout_constraintTop_toBottomOf="@+id/input_linear_layout"
             app:layout_constraintBottom_toTopOf="@+id/footer_liner_layout">
         <ListView

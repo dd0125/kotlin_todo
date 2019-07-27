@@ -19,8 +19,9 @@
             app:layout_constraintRight_toRightOf="parent"
             android:orientation="horizontal">
         <Button
-                android:layout_width="50dp" android:layout_height="match_parent"
-                android:text="ALL"
+            android:id="@+id/all_complate_button"
+            android:layout_width="50dp" android:layout_height="match_parent"
+            android:text="ALL"
         />
         <EditText
                 android:id="@+id/input_new_todo_edit_text"
@@ -38,68 +39,81 @@
             app:layout_constraintRight_toRightOf="parent"
             android:background="#eff"
             app:layout_constraintTop_toBottomOf="@+id/input_linear_layout"
-            app:layout_constraintBottom_toTopOf="@+id/footer_liner_layout">
+            app:layout_constraintBottom_toTopOf="@+id/footer_layout">
         <ListView
                 android:id="@+id/task_list_view"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_width="wrap_content" android:layout_height="wrap_content"
-                tools:ignore="MissingConstraints">
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                tools:ignore="MissingConstraints"
+                android:background="#ccffcc"
+        >
 
         </ListView>
 
     </LinearLayout>
 
-    <LinearLayout
-            android:id="@+id/footer_liner_layout"
+    <FrameLayout
+            android:id="@+id/footer_layout"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:orientation="horizontal">
         <TextView
+                android:id="@+id/active_item_count_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="items left"
                 android:textSize="10sp"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="left|center_vertical"
         />
 
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="All"
-                android:textSize="10sp"
-                android:layout_gravity="center_vertical"
-        />
+        <LinearLayout
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_gravity="center"
+        >
+            <Button
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:text="All"
+                    android:textSize="8sp"
+                    android:layout_gravity="center_vertical"
+            />
+
+            <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Active"
+                    android:textSize="8sp"
+                    android:layout_gravity="center_vertical"
+            />
+
+            <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Complate"
+                    android:textSize="8sp"
+                    android:layout_gravity="center_vertical"
+            />
+
+
+        </LinearLayout>
 
         <Button
+                android:id="@+id/clear_complated_button"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Active"
-                android:textSize="10sp"
-                android:layout_gravity="center_vertical"
-        />
-
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Complate"
-                android:textSize="10sp"
-                android:layout_gravity="center_vertical"
-        />
-
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:text="Clear Complated"
-                android:textSize="10sp"
-                android:layout_gravity="center_vertical"
-        />
+                android:textSize="8sp"
+                android:layout_gravity="right|center_vertical"
+                android:background="@drawable/button_style" android:paddingLeft="5dp" android:paddingRight="5dp"/>
 
-    </LinearLayout>
+    </FrameLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

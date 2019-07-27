@@ -17,15 +17,14 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-
-
-
+import java.util.*
 
 
 class TaskListFragment : Fragment() {
     private fun getMainApplication() :MainApplication {
         return activity?.application as MainApplication
     }
+    var currentTaskList: List<Task>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +40,7 @@ class TaskListFragment : Fragment() {
 
         val inputNewTodoEditText = view.findViewById<EditText>(R.id.input_new_todo_edit_text)
 
+        // タスクの追加
         inputNewTodoEditText.setOnEditorActionListener { v, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val editText: EditText = v as EditText
@@ -70,6 +70,59 @@ class TaskListFragment : Fragment() {
             return@setOnEditorActionListener true
         }
 
+        // 全てのタスクを完了にする
+        all_complate_button.setOnClickListener {
+            if(currentTaskList == null){
+                return@setOnClickListener
+            }
+            val mainApplication = getMainApplication() as MainApplication
+            val taskDao = mainApplication.getTaskDao()
+
+            runBlocking {
+                val launch = GlobalScope.launch {
+                    currentTaskList?.forEach {
+                        val task = it
+                        if(task.doneAt == null){
+                            task.doneAt = Date()
+                            // タスクの更新
+                            taskDao.update(task)
+                        }
+                    }
+                }
+                launch.join()
+
+                // タスクを再読み込みする
+                reloadTaskList()
+
+            }
+        }
+
+        // 完了済のタスクを削除する
+        clear_complated_button.setOnClickListener {
+            if(currentTaskList == null){
+                return@setOnClickListener
+            }
+            val mainApplication = getMainApplication() as MainApplication
+            val taskDao = mainApplication.getTaskDao()
+
+            runBlocking {
+                val launch = GlobalScope.launch {
+                    currentTaskList?.forEach {
+                        val task = it
+                        if(task.doneAt != null){
+                            // タスクの削除
+                            taskDao.delete(task)
+                        }
+                    }
+                }
+                launch.join()
+
+                // タスクを再読み込みする
+                reloadTaskList()
+
+            }
+        }
+
         // TaskListView を再読み込みする
         reloadTaskList()
 
@@ -77,7 +130,7 @@ class TaskListFragment : Fragment() {
 
 
     private fun reloadTaskList() {
-        val mainApplication = activity?.application as MainApplication
+        val mainApplication = getMainApplication() as MainApplication
         val taskDao = mainApplication.getTaskDao()
 
 //        val activity = this
@@ -88,6 +141,9 @@ class TaskListFragment : Fragment() {
                 return@async taskList
             }
             val taskList:List<Task>? = deferred.await()
+            currentTaskList = taskList
+
+            // ListAdapter の設定
             val adapter = TaskListAdapter(activity!!, taskList!!)
             adapter.setUpdateTaskFunction {
                 val task = it
@@ -103,11 +159,35 @@ class TaskListFragment : Fragment() {
                 }
                 // TaskListView を再読み込み
                 reloadTaskList()
+            }
+            adapter.setDeleteTaskFunction {
+                val task = it
+
+                val mainApplication = getMainApplication() as MainApplication
+                val taskDao = mainApplication.getTaskDao()
+
+                runBlocking {
+                    val l = GlobalScope.launch {
+                        taskDao.delete(task)
+                    }
+                    l.join()
+                }
+                // TaskListView を再読み込み
+                reloadTaskList()
 
             }
-
-
             task_list_view.adapter = adapter
+
+            var activeTaskCount = 0
+            taskList.forEach {
+                if(it.doneAt == null){
+                    // 完了日時が入っていないタスクのみカウントする
+                    activeTaskCount++
+                }
+            }
+
+            active_item_count_view.text = activeTaskCount.toString() + " items left"
+
         }
 
     }

@@ -17,6 +17,7 @@ class MainApplication: Application() {
         setupTaskDao()
     }
 
+
     public fun getTaskDao():TaskDao {
         return this.taskDao
     }

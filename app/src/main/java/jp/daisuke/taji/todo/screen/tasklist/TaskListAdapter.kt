@@ -1,4 +1,4 @@
-package jp.daisuke.taji.todo
+package jp.daisuke.taji.todo.screen.tasklist
 
 import android.content.Context
 import android.graphics.Color
@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.TextView
+import jp.daisuke.taji.todo.R
 import jp.daisuke.taji.todo.db.model.Task
 import java.util.*
 

@@ -119,7 +119,7 @@ class TaskListFragment : Fragment() {
         }
 
         // 完了済のタスクを削除する
-        clear_complated_button.setOnClickListener {
+        clear_completed_button.setOnClickListener {
             if(currentTaskList == null){
                 return@setOnClickListener
             }
@@ -204,6 +204,8 @@ class TaskListFragment : Fragment() {
             }
             task_list_view.adapter = adapter
 
+
+            val taskListSize = taskList.size
             var activeTaskCount = 0
             taskList.forEach {
                 if(it.doneAt == null){
@@ -211,8 +213,15 @@ class TaskListFragment : Fragment() {
                     activeTaskCount++
                 }
             }
-
             active_item_count_view.text = activeTaskCount.toString() + " items left"
+
+
+            val completeTaskCount = taskListSize - activeTaskCount
+            if(completeTaskCount > 0){
+                clear_completed_button.visibility = View.VISIBLE
+            }else{
+                clear_completed_button.visibility = View.INVISIBLE
+            }
 
         }
 

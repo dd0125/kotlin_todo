@@ -37,7 +37,6 @@
             android:layout_width="0dp" android:layout_height="0dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:background="#eff"
             app:layout_constraintTop_toBottomOf="@+id/input_linear_layout"
             app:layout_constraintBottom_toTopOf="@+id/footer_layout">
         <ListView
@@ -47,7 +46,6 @@
                 app:layout_constraintRight_toRightOf="parent"
                 android:layout_width="match_parent" android:layout_height="wrap_content"
                 tools:ignore="MissingConstraints"
-                android:background="#ccffcc"
         >
 
         </ListView>

@@ -6,13 +6,11 @@ import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.CheckBox
-import android.widget.ImageView
-import android.widget.TextView
-import jp.daisuke.taji.todo.R
+import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import jp.daisuke.taji.todo.db.model.Task
 import java.util.*
+
 
 class TaskListAdapter(context: Context, taskList: List<Task>) : ArrayAdapter<Task>(context, 0, taskList) {
     private val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -36,13 +34,43 @@ class TaskListAdapter(context: Context, taskList: List<Task>) : ArrayAdapter<Tas
         val nameTextView: TextView
         val doneCheckBox: CheckBox
         if (view == null) {
-            view = layoutInflater.inflate(R.layout.task_list_item, parent, false) as View
+            view = layoutInflater.inflate(jp.daisuke.taji.todo.R.layout.task_list_item, parent, false) as View
 
-            nameTextView = view.findViewById(R.id.name_text_view)
+            nameTextView = view.findViewById(jp.daisuke.taji.todo.R.id.name_text_view)
 
-            doneCheckBox = view.findViewById(R.id.done_checkbox)
+            // タスク名変更ダイアログを表示
+            nameTextView.setOnLongClickListener {
+                val nameTextView = it as TextView
+                val task = nameTextView.tag as Task
+                val builder = AlertDialog.Builder(context)
+                builder.setTitle("Change Task Name")
 
-            val deleteButton: ImageView = view.findViewById(R.id.clear_button)
+                val inputEditText = EditText(context)
+                inputEditText.maxLines = 1
+                inputEditText.setText(task.name)
+                builder.setView(inputEditText)
+
+                builder.setPositiveButton("OK") {
+                    dialog, _ -> run {
+                        task.name = inputEditText.text.toString()
+                        updateTaskFunction?.invoke(task)
+                        dialog.cancel()
+                    }
+                }
+                builder.setNegativeButton("Cancel") {
+                    dialog, _ -> run {
+                        dialog.cancel()
+                    }
+                }
+
+                builder.show()
+
+                return@setOnLongClickListener true
+            }
+
+            doneCheckBox = view.findViewById(jp.daisuke.taji.todo.R.id.done_checkbox)
+
+            val deleteButton: ImageView = view.findViewById(jp.daisuke.taji.todo.R.id.clear_button)
             deleteButton.setOnClickListener {
                 deleteTaskFunction?.invoke(task)
             }
@@ -75,6 +103,7 @@ class TaskListAdapter(context: Context, taskList: List<Task>) : ArrayAdapter<Tas
             paint.flags = nameTextView.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
         }
         nameTextView.text = task.name
+        nameTextView.tag = task
 
         // 完了済のタスクの場合、Check を入れる
         doneCheckBox.setOnCheckedChangeListener(null)
@@ -93,7 +122,7 @@ class TaskListAdapter(context: Context, taskList: List<Task>) : ArrayAdapter<Tas
 
 
         view.setOnFocusChangeListener { v, hasFocus ->
-            val clearButton = v.findViewById<View>(R.id.clear_button)
+            val clearButton = v.findViewById<View>(jp.daisuke.taji.todo.R.id.clear_button)
             if(hasFocus){
                 clearButton.visibility = View.VISIBLE
             }else{

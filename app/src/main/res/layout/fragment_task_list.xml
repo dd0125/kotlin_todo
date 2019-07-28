@@ -26,9 +26,9 @@
         <EditText
                 android:id="@+id/input_new_todo_edit_text"
                 android:layout_width="match_parent" android:layout_height="match_parent"
-                android:maxLines="1"
                 android:inputType="text"
                 android:hint="What needs to be done?"
+                android:maxLines="1"
                 android:imeOptions="actionDone"
         />
     </LinearLayout>

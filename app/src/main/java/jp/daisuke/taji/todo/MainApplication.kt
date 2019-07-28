@@ -8,7 +8,7 @@ import jp.daisuke.taji.todo.db.model.TaskDao
 
 class MainApplication: Application() {
     private lateinit var taskDao: TaskDao;
-    private val DATABASE_FILE_NAME = "kotlin_room_sample3.db";
+    private val DATABASE_FILE_NAME = "todo.db";
 
     override fun onCreate() {
         super.onCreate()

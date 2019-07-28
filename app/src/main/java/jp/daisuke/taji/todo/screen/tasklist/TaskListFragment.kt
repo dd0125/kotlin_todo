@@ -156,7 +156,7 @@ class TaskListFragment : Fragment() {
             if(currentTaskList == null){
                 return@setOnClickListener
             }
-            val mainApplication = getMainApplication() as MainApplication
+            val mainApplication = getMainApplication()
             val taskDao = mainApplication.getTaskDao()
 
             runBlocking {
@@ -196,56 +196,68 @@ class TaskListFragment : Fragment() {
                     TaskDisplayState.Active -> taskDao.findActive()
                     TaskDisplayState.Complete -> taskDao.findComplete()
                 }
-//                val taskList = taskDao.findAll()
                 return@async taskList
             }
             val taskList:List<Task>? = deferred.await()
             currentTaskList = taskList
 
             // ListAdapter の設定
-            val adapter = TaskListAdapter(activity!!, taskList!!)
-            adapter.setUpdateTaskFunction {
-                val task = it
+            if(task_list_view.adapter != null){
+                val adapter = task_list_view.adapter as TaskListAdapter
+                adapter.clear()
+                adapter.addAll(taskList)
+                adapter.notifyDataSetChanged()
+            }else{
+                val adapter = TaskListAdapter(activity!!, taskList!!)
+                adapter.setUpdateTaskFunction {
+                    val task = it
 
-                val mainApplication = getMainApplication() as MainApplication
-                val taskDao = mainApplication.getTaskDao()
+                    val mainApplication = getMainApplication() as MainApplication
+                    val taskDao = mainApplication.getTaskDao()
 
-                runBlocking {
-                    val l = GlobalScope.launch {
-                        taskDao.update(task)
+                    runBlocking {
+                        val l = GlobalScope.launch {
+                            taskDao.update(task)
+                        }
+                        l.join()
                     }
-                    l.join()
+                    // TaskListView を再読み込み
+                    reloadTaskList()
                 }
-                // TaskListView を再読み込み
-                reloadTaskList()
-            }
-            adapter.setDeleteTaskFunction {
-                val task = it
+                adapter.setDeleteTaskFunction {
+                    val task = it
 
-                val mainApplication = getMainApplication() as MainApplication
-                val taskDao = mainApplication.getTaskDao()
+                    val mainApplication = getMainApplication() as MainApplication
+                    val taskDao = mainApplication.getTaskDao()
 
-                runBlocking {
-                    val l = GlobalScope.launch {
-                        taskDao.delete(task)
+                    runBlocking {
+                        val l = GlobalScope.launch {
+                            taskDao.delete(task)
+                        }
+                        l.join()
                     }
-                    l.join()
+                    // TaskListView を再読み込み
+                    reloadTaskList()
+
                 }
-                // TaskListView を再読み込み
-                reloadTaskList()
+                task_list_view.adapter = adapter
 
             }
-            task_list_view.adapter = adapter
 
-
-            val taskListSize = taskList.size
+            val taskListSize:Int
             var activeTaskCount = 0
-            taskList.forEach {
-                if(it.doneAt == null){
-                    // 完了日時が入っていないタスクのみカウントする
-                    activeTaskCount++
+            if(taskList != null){
+                taskListSize = taskList.size
+                taskList.forEach {
+                    if(it.doneAt == null){
+                        // 完了日時が入っていないタスクのみカウントする
+                        activeTaskCount++
+                    }
                 }
+            }else{
+                taskListSize = 0
             }
+
             active_item_count_view.text = activeTaskCount.toString() + " items left"
 
 

@@ -53,7 +53,7 @@ class TaskListAdapter(context: Context, taskList: List<Task>) : ArrayAdapter<Tas
                 // Listenerを実行
                 updateTaskFunction?.invoke(task)
             }
-            val deleteButton: ImageView = view.findViewById(R.id.delete_button)
+            val deleteButton: ImageView = view.findViewById(R.id.clear_button)
             deleteButton.setOnClickListener {
                 deleteTaskFunction?.invoke(task)
             }
@@ -87,7 +87,7 @@ class TaskListAdapter(context: Context, taskList: List<Task>) : ArrayAdapter<Tas
         holder.nameTextView.text = task.name
 
         view.setOnFocusChangeListener { v, hasFocus ->
-            val deleteButton = v.findViewById<View>(R.id.delete_button)
+            val deleteButton = v.findViewById<View>(R.id.clear_button)
             if(hasFocus){
                 deleteButton.visibility = View.VISIBLE
             }else{

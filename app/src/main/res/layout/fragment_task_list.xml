@@ -18,10 +18,10 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:orientation="horizontal">
-        <Button
-            android:id="@+id/all_complate_button"
+        <ImageView
+            android:id="@+id/all_complete_switch"
+            android:src="@android:drawable/ic_menu_more"
             android:layout_width="50dp" android:layout_height="match_parent"
-            android:text="ALL"
         />
         <EditText
                 android:id="@+id/input_new_todo_edit_text"

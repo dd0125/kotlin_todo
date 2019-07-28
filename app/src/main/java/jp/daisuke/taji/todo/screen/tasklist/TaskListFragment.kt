@@ -85,8 +85,8 @@ class TaskListFragment : Fragment() {
             }
         }
 
-        // 全てのタスクを完了にする
-        all_complate_button.setOnClickListener {
+        // 全てのタスクを完了にする。既に全て完了の場合は、全て未完了にする
+        all_complete_switch.setOnClickListener {
             if(currentTaskList == null){
                 return@setOnClickListener
             }
@@ -95,12 +95,33 @@ class TaskListFragment : Fragment() {
 
             runBlocking {
                 val launch = GlobalScope.launch {
-                    currentTaskList?.forEach {
-                        val task = it
-                        if(task.doneAt == null){
-                            task.doneAt = Date()
-                            // タスクの更新
-                            taskDao.update(task)
+                    var completeTaskCount = 0
+                    currentTaskList!!.forEach {
+                        if(it.doneAt != null){
+                            completeTaskCount++
+                        }
+                    }
+                    val taskCount = currentTaskList!!.size
+
+                    if(taskCount == completeTaskCount){
+                        // 既に全てが完了ならば、全て未完了に更新する
+                        currentTaskList?.forEach {
+                            val task = it
+                            if(task.doneAt != null){
+                                task.doneAt = null
+                                // タスクの更新
+                                taskDao.update(task)
+                            }
+                        }
+                    }else{
+                        // 全て完了に更新する
+                        currentTaskList?.forEach {
+                            val task = it
+                            if(task.doneAt == null){
+                                task.doneAt = Date()
+                                // タスクの更新
+                                taskDao.update(task)
+                            }
                         }
                     }
                 }
@@ -233,6 +254,13 @@ class TaskListFragment : Fragment() {
                 clear_completed_button.visibility = View.VISIBLE
             }else{
                 clear_completed_button.visibility = View.INVISIBLE
+            }
+
+            if(completeTaskCount == taskListSize){
+                // 全て完了の場合、全完了ボタンの表示を濃くする
+                all_complete_switch.alpha = 1f
+            }else{
+                all_complete_switch.alpha = 0.2f
             }
 
         }

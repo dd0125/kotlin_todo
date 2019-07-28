@@ -48,6 +48,12 @@ class TaskListFragment : Fragment() {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val editText: EditText = v as EditText
                 val text:String = editText.text.toString()
+
+                if(text.isEmpty()){
+                    // 入力文字がない場合は処理しない
+                    return@setOnEditorActionListener true
+                }
+
                 val deferred = GlobalScope.async {
                     // タスクを新規保存
                     val isSuccess = insertTask(text)

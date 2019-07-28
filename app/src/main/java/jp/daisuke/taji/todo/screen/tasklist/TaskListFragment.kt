@@ -25,20 +25,23 @@ class TaskListFragment : Fragment() {
         return activity?.application as MainApplication
     }
     var currentTaskList: List<Task>? = null
+    enum class TaskDisplayState {
+        All, Active, Complete
+    }
+    var taskDisplayState: TaskDisplayState = TaskListFragment.TaskDisplayState.All
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_task_list, container, false)
+        return inflater.inflate(jp.daisuke.taji.todo.R.layout.fragment_task_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val inputNewTodoEditText = view.findViewById<EditText>(R.id.input_new_todo_edit_text)
+        val inputNewTodoEditText = view.findViewById<EditText>(jp.daisuke.taji.todo.R.id.input_new_todo_edit_text)
 
         // タスクの追加
         inputNewTodoEditText.setOnEditorActionListener { v, actionId, _ ->
@@ -97,6 +100,24 @@ class TaskListFragment : Fragment() {
             }
         }
 
+        // タスクの表示条件選択
+        radio_group_task_state.setOnCheckedChangeListener { group, checkedId ->
+            when(checkedId){
+                R.id.radio_button_all -> {
+                    taskDisplayState = TaskDisplayState.All
+                }
+                R.id.radio_button_active -> {
+                    taskDisplayState = TaskDisplayState.Active
+                }
+                R.id.radio_button_complete -> {
+                    taskDisplayState = TaskDisplayState.Complete
+                }
+
+            }
+            // タスクを再読み込みする
+            reloadTaskList()
+        }
+
         // 完了済のタスクを削除する
         clear_complated_button.setOnClickListener {
             if(currentTaskList == null){
@@ -123,6 +144,8 @@ class TaskListFragment : Fragment() {
             }
         }
 
+        radio_button_all.isChecked = true
+
         // TaskListView を再読み込みする
         reloadTaskList()
 
@@ -133,11 +156,14 @@ class TaskListFragment : Fragment() {
         val mainApplication = getMainApplication() as MainApplication
         val taskDao = mainApplication.getTaskDao()
 
-//        val activity = this
-
         runBlocking{
             val deferred = GlobalScope.async {
-                val taskList = taskDao.findAll()
+                val taskList = when(taskDisplayState){
+                    TaskDisplayState.All -> taskDao.findAll()
+                    TaskDisplayState.Active -> taskDao.findActive()
+                    TaskDisplayState.Complete -> taskDao.findComplete()
+                }
+//                val taskList = taskDao.findAll()
                 return@async taskList
             }
             val taskList:List<Task>? = deferred.await()

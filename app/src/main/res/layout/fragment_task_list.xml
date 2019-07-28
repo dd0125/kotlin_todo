@@ -77,30 +77,48 @@
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:layout_gravity="center"
         >
-            <Button
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
+            <RadioGroup
+                android:id="@+id/radio_group_task_state"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:orientation="horizontal"
+            >
+                <RadioButton
                     android:text="All"
-                    android:textSize="8sp"
-                    android:layout_gravity="center_vertical"
-            />
-
-            <Button
+                    android:id="@+id/radio_button_all"
+                    android:background="@drawable/radio_button_style"
+                    android:button="@null"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Active"
-                    android:textSize="8sp"
-                    android:layout_gravity="center_vertical"
-            />
-
-            <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Complate"
-                    android:textSize="8sp"
-                    android:layout_gravity="center_vertical"
-            />
-
+                    android:layout_height="30dp"
+                    android:textSize="15sp"
+                    android:paddingLeft="5dp" android:paddingRight="5dp"
+                    android:layout_marginLeft="5dp" android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                 />
+                <RadioButton
+                        android:text="Active"
+                        android:id="@+id/radio_button_active"
+                        android:background="@drawable/radio_button_style"
+                        android:button="@null"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:textSize="15sp"
+                        android:paddingLeft="5dp" android:paddingRight="5dp"
+                        android:layout_marginLeft="5dp" android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                />
+                <RadioButton
+                        android:text="Complete"
+                        android:id="@+id/radio_button_complete"
+                        android:background="@drawable/radio_button_style"
+                        android:button="@null"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:textSize="15sp"
+                        android:paddingLeft="5dp" android:paddingRight="5dp"
+                        android:layout_marginLeft="5dp" android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                />
+            </RadioGroup>
 
         </LinearLayout>
 
@@ -109,9 +127,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:text="Clear Complated"
-                android:textSize="8sp"
                 android:layout_gravity="right|center_vertical"
-                android:background="@drawable/button_style" android:paddingLeft="5dp" android:paddingRight="5dp"/>
+                android:background="@drawable/button_style"
+                android:textSize="8sp"
+                android:paddingLeft="5dp" android:paddingRight="5dp"
+        />
 
     </FrameLayout>
 

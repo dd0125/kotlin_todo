@@ -11,6 +11,12 @@ interface TaskDao {
     @Query("SELECT * FROM task")
     fun findAll(): List<Task>
 
+    @Query("SELECT * FROM task where doneAt is null")
+    fun findActive(): List<Task>
+
+    @Query("SELECT * FROM task where doneAt is not null")
+    fun findComplete(): List<Task>
+
     @Update
     fun update(task: Task)
 

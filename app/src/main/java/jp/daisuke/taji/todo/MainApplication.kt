@@ -18,7 +18,7 @@ class MainApplication: Application() {
     }
 
 
-    public fun getTaskDao():TaskDao {
+    fun getTaskDao():TaskDao {
         return this.taskDao
     }
 

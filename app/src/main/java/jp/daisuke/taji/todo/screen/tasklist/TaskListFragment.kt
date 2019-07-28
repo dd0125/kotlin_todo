@@ -28,20 +28,16 @@ class TaskListFragment : Fragment() {
     enum class TaskDisplayState {
         All, Active, Complete
     }
-    var taskDisplayState: TaskDisplayState = TaskListFragment.TaskDisplayState.All
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    var taskDisplayState: TaskDisplayState = TaskDisplayState.All
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(jp.daisuke.taji.todo.R.layout.fragment_task_list, container, false)
+        return inflater.inflate(R.layout.fragment_task_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val inputNewTodoEditText = view.findViewById<EditText>(jp.daisuke.taji.todo.R.id.input_new_todo_edit_text)
+        val inputNewTodoEditText = view.findViewById<EditText>(R.id.input_new_todo_edit_text)
 
         // タスクの追加
         inputNewTodoEditText.setOnEditorActionListener { v, actionId, _ ->
@@ -80,7 +76,7 @@ class TaskListFragment : Fragment() {
             if(!hasFocus){
                 // キーボードを閉じる
                 val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS)
+                inputMethodManager.hideSoftInputFromWindow(v.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 
             }
         }
@@ -90,7 +86,7 @@ class TaskListFragment : Fragment() {
             if(currentTaskList == null){
                 return@setOnClickListener
             }
-            val mainApplication = getMainApplication() as MainApplication
+            val mainApplication = getMainApplication()
             val taskDao = mainApplication.getTaskDao()
 
             runBlocking {
@@ -186,7 +182,7 @@ class TaskListFragment : Fragment() {
 
 
     private fun reloadTaskList() {
-        val mainApplication = getMainApplication() as MainApplication
+        val mainApplication = getMainApplication()
         val taskDao = mainApplication.getTaskDao()
 
         runBlocking{
@@ -212,7 +208,7 @@ class TaskListFragment : Fragment() {
                 adapter.setUpdateTaskFunction {
                     val task = it
 
-                    val mainApplication = getMainApplication() as MainApplication
+                    val mainApplication = getMainApplication()
                     val taskDao = mainApplication.getTaskDao()
 
                     runBlocking {
@@ -227,7 +223,7 @@ class TaskListFragment : Fragment() {
                 adapter.setDeleteTaskFunction {
                     val task = it
 
-                    val mainApplication = getMainApplication() as MainApplication
+                    val mainApplication = getMainApplication()
                     val taskDao = mainApplication.getTaskDao()
 
                     runBlocking {

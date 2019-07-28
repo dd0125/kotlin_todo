@@ -8,9 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import jp.daisuke.taji.todo.R
 import jp.daisuke.taji.todo.db.model.Task
 import java.util.*
-
 
 class TaskListAdapter(context: Context, taskList: List<Task>) : ArrayAdapter<Task>(context, 0, taskList) {
     private val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -34,9 +34,9 @@ class TaskListAdapter(context: Context, taskList: List<Task>) : ArrayAdapter<Tas
         val nameTextView: TextView
         val doneCheckBox: CheckBox
         if (view == null) {
-            view = layoutInflater.inflate(jp.daisuke.taji.todo.R.layout.task_list_item, parent, false) as View
+            view = layoutInflater.inflate(R.layout.task_list_item, parent, false) as View
 
-            nameTextView = view.findViewById(jp.daisuke.taji.todo.R.id.name_text_view)
+            nameTextView = view.findViewById(R.id.name_text_view)
 
             // タスク名変更ダイアログを表示
             nameTextView.setOnLongClickListener {

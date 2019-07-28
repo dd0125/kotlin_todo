@@ -268,8 +268,8 @@ class TaskListFragment : Fragment() {
                 clear_completed_button.visibility = View.INVISIBLE
             }
 
-            if(completeTaskCount == taskListSize){
-                // 全て完了の場合、全完了ボタンの表示を濃くする
+            if(completeTaskCount == taskListSize && completeTaskCount > 0){
+                // 完了が1つ以上あり、全て完了の場合、全完了ボタンの表示を濃くする
                 all_complete_switch.alpha = 1f
             }else{
                 all_complete_switch.alpha = 0.2f

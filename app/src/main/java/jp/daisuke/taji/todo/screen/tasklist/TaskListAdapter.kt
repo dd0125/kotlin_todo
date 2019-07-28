@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.Button
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import jp.daisuke.taji.todo.R
@@ -34,25 +34,14 @@ class TaskListAdapter(context: Context, taskList: List<Task>) : ArrayAdapter<Tas
         val task = getItem(position) as Task
 
         val nameTextView: TextView
+        val doneCheckBox: CheckBox
         if (view == null) {
             view = layoutInflater.inflate(R.layout.task_list_item, parent, false) as View
 
-
-
             nameTextView = view.findViewById(R.id.name_text_view)
 
-            val doneButton: Button = view.findViewById(R.id.done_button)
-            doneButton.setOnClickListener {
-                if(task.doneAt != null){
-                    // 完了の場合、キャンセルする
-                    task.doneAt = null
-                }else{
-                    // 未完了の場合、完了させる
-                    task.doneAt = Date()
-                }
-                // Listenerを実行
-                updateTaskFunction?.invoke(task)
-            }
+            doneCheckBox = view.findViewById(R.id.done_checkbox)
+
             val deleteButton: ImageView = view.findViewById(R.id.clear_button)
             deleteButton.setOnClickListener {
                 deleteTaskFunction?.invoke(task)
@@ -60,13 +49,14 @@ class TaskListAdapter(context: Context, taskList: List<Task>) : ArrayAdapter<Tas
 
             holder = ViewHolder(
                 nameTextView = nameTextView,
-                doneButton = doneButton,
+                doneCheckBox = doneCheckBox,
                 deleteButton = deleteButton
             )
             view.tag = holder
         } else {
             holder = view.tag as ViewHolder
             nameTextView = holder.nameTextView
+            doneCheckBox = holder.doneCheckBox
 
         }
 
@@ -84,14 +74,30 @@ class TaskListAdapter(context: Context, taskList: List<Task>) : ArrayAdapter<Tas
             // 取り消し線がついていたら外す
             paint.flags = nameTextView.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
         }
-        holder.nameTextView.text = task.name
+        nameTextView.text = task.name
+
+        // 完了済のタスクの場合、Check を入れる
+        doneCheckBox.setOnCheckedChangeListener(null)
+        doneCheckBox.isChecked = (task.doneAt != null)
+        doneCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
+            if(isChecked){
+                // 完了にする場合、完了日時を入れる
+                task.doneAt = Date()
+            }else{
+                // 未完了にする場合、完了日時を削除
+                task.doneAt = null
+            }
+            // Listenerを実行
+            updateTaskFunction?.invoke(task)
+        }
+
 
         view.setOnFocusChangeListener { v, hasFocus ->
-            val deleteButton = v.findViewById<View>(R.id.clear_button)
+            val clearButton = v.findViewById<View>(R.id.clear_button)
             if(hasFocus){
-                deleteButton.visibility = View.VISIBLE
+                clearButton.visibility = View.VISIBLE
             }else{
-                deleteButton.visibility = View.INVISIBLE
+                clearButton.visibility = View.INVISIBLE
 
             }
         }
@@ -101,7 +107,7 @@ class TaskListAdapter(context: Context, taskList: List<Task>) : ArrayAdapter<Tas
 
     private data class ViewHolder(
         val nameTextView: TextView,
-        val doneButton:Button,
+        val doneCheckBox: CheckBox,
         val deleteButton: ImageView
     )
 }

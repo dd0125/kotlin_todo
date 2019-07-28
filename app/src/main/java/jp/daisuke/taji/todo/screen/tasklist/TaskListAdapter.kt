@@ -33,6 +33,7 @@ class TaskListAdapter(context: Context, taskList: List<Task>) : ArrayAdapter<Tas
 
         val nameTextView: TextView
         val doneCheckBox: CheckBox
+        val deleteButton: ImageView
         if (view == null) {
             view = layoutInflater.inflate(R.layout.task_list_item, parent, false) as View
 
@@ -70,8 +71,10 @@ class TaskListAdapter(context: Context, taskList: List<Task>) : ArrayAdapter<Tas
 
             doneCheckBox = view.findViewById(jp.daisuke.taji.todo.R.id.done_checkbox)
 
-            val deleteButton: ImageView = view.findViewById(jp.daisuke.taji.todo.R.id.clear_button)
+            deleteButton = view.findViewById(jp.daisuke.taji.todo.R.id.clear_button)
             deleteButton.setOnClickListener {
+                val deleteButton = it as ImageView
+                val task = deleteButton.tag as Task
                 deleteTaskFunction?.invoke(task)
             }
 
@@ -85,7 +88,7 @@ class TaskListAdapter(context: Context, taskList: List<Task>) : ArrayAdapter<Tas
             holder = view.tag as ViewHolder
             nameTextView = holder.nameTextView
             doneCheckBox = holder.doneCheckBox
-
+            deleteButton = holder.deleteButton
         }
 
         val paint = nameTextView.paint
@@ -119,7 +122,7 @@ class TaskListAdapter(context: Context, taskList: List<Task>) : ArrayAdapter<Tas
             // Listenerを実行
             updateTaskFunction?.invoke(task)
         }
-
+        deleteButton.tag = task
 
         view.setOnFocusChangeListener { v, hasFocus ->
             val clearButton = v.findViewById<View>(jp.daisuke.taji.todo.R.id.clear_button)

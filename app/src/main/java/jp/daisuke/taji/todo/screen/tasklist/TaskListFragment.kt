@@ -60,9 +60,6 @@ class TaskListFragment : Fragment() {
                         // 入力値をクリアする
                         editText.text.clear()
 
-                        // キーボードを閉じる
-                        val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                        inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS)
 
                         // タスクを再読み込みする
                         reloadTaskList()
@@ -71,6 +68,15 @@ class TaskListFragment : Fragment() {
                 }
             }
             return@setOnEditorActionListener true
+        }
+        // タスク新規登録時の入力欄からフォーカスが外れた場合、キーボードを閉じる
+        inputNewTodoEditText.setOnFocusChangeListener { v, hasFocus ->
+            if(!hasFocus){
+                // キーボードを閉じる
+                val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS)
+
+            }
         }
 
         // 全てのタスクを完了にする

@@ -124,7 +124,7 @@
                 android:id="@+id/clear_completed_button"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:text="Clear Complated"
+                android:text="Clear Completed"
                 android:layout_gravity="right|center_vertical"
                 android:background="@drawable/button_style"
                 android:textSize="8sp"
